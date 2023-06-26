@@ -1,5 +1,6 @@
 package com.chf.todoapi.todo
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
@@ -8,10 +9,12 @@ import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.post
 
 @WebMvcTest
 class TodoControllerTest @Autowired constructor(
-        private val mockMvc: MockMvc
+        private val mockMvc: MockMvc,
+        private val objectMapper: ObjectMapper
 ) {
     private val baseUrl = "/api/todos"
     private val todos = listOf(
@@ -64,7 +67,7 @@ class TodoControllerTest @Autowired constructor(
     fun `should return an existing todo return`() {
         val todoId = 1
 
-        `when`(todoService.getTodo())
+        `when`(todoService.getTodo(todoId))
                 .thenReturn(todos.first { it.id == todoId })
 
         mockMvc.get("$baseUrl/$todoId")
@@ -82,7 +85,7 @@ class TodoControllerTest @Autowired constructor(
         val todoId = -99
         val exceptionMessage = "Could not find a todo with the id $todoId"
 
-        `when`(todoService.getTodo())
+        `when`(todoService.getTodo(todoId))
                 .thenThrow(TodoNotFoundException(exceptionMessage))
 
         mockMvc.get("$baseUrl/$todoId")
@@ -90,5 +93,28 @@ class TodoControllerTest @Autowired constructor(
                     status { isNotFound() }
                     content { string(exceptionMessage) }
                 }
+    }
+
+    @Test
+    fun `should create a new todo`() {
+        val todoRequest = TodoRequest("Study Kotlin", false)
+        val newTodoId = 4
+        val todoResponse = TodoResponse(newTodoId, todoRequest.name, todoRequest.isCompleted)
+
+        `when`(todoService.addTodo(todoRequest))
+                .thenReturn(todoResponse)
+
+        mockMvc.post(baseUrl) {
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(todoRequest)
+        }.andExpect {
+            status { isCreated() }
+            content {
+                contentType(MediaType.APPLICATION_JSON)
+                jsonPath("$.id") { value(newTodoId) }
+                jsonPath("$.name") { value(todoRequest.name) }
+                jsonPath("$.isCompleted") { value(todoRequest.isCompleted) }
+            }
+        }
     }
 }
