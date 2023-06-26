@@ -1,6 +1,6 @@
 package com.chf.todoapi.todo
 
 interface TodoService {
-    fun getTodos(): Collection<Todo>
-    fun getTodo(): Todo
+    fun getTodos(): Collection<TodoResponse>
+    fun getTodo(): TodoResponse
 }

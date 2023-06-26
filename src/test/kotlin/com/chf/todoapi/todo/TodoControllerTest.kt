@@ -15,9 +15,9 @@ class TodoControllerTest @Autowired constructor(
 ) {
     private val baseUrl = "/api/todos"
     private val todos = listOf(
-            Todo(1, "Grocery shopping", true),
-            Todo(2, "Cook dinner", false),
-            Todo(3, "Evening exercise", false),
+            TodoResponse(1, "Grocery shopping", true),
+            TodoResponse(2, "Cook dinner", false),
+            TodoResponse(3, "Evening exercise", false),
     )
 
     @MockBean

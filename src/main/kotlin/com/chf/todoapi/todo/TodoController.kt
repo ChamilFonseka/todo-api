@@ -15,12 +15,12 @@ class TodoController @Autowired constructor(
         private val todoService: TodoService
 ) {
     @GetMapping
-    fun getTodos(): ResponseEntity<Collection<Todo>> {
+    fun getTodos(): ResponseEntity<Collection<TodoResponse>> {
         return ResponseEntity.ok(todoService.getTodos())
     }
 
     @GetMapping("/{todoId}")
-    fun getTodo(@PathVariable todoId: Int): ResponseEntity<Todo> {
+    fun getTodo(@PathVariable todoId: Int): ResponseEntity<TodoResponse> {
         return ResponseEntity.ok(todoService.getTodo())
     }
 
