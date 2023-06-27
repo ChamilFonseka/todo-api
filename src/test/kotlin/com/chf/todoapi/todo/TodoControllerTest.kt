@@ -10,6 +10,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.put
 
 @WebMvcTest
 class TodoControllerTest @Autowired constructor(
@@ -114,6 +115,28 @@ class TodoControllerTest @Autowired constructor(
                 jsonPath("$.id") { value(newTodoId) }
                 jsonPath("$.name") { value(todoRequest.name) }
                 jsonPath("$.isCompleted") { value(todoRequest.isCompleted) }
+            }
+        }
+    }
+
+    @Test
+    fun `should update an existing todo`() {
+        val updatedTodoId = 2
+        val updatedTodo = TodoRequest("Update", true)
+        val todoResponse = TodoResponse(updatedTodoId, updatedTodo.name, updatedTodo.isCompleted)
+
+        `when`(todoService.updateTodo(updatedTodoId, updatedTodo))
+                .thenReturn(todoResponse)
+
+        mockMvc.put("$baseUrl/$updatedTodoId") {
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(updatedTodo)
+        }.andExpect {
+            status { isOk() }
+            content {
+                jsonPath("$.id") { value(updatedTodoId) }
+                jsonPath("$.name") { value(updatedTodo.name) }
+                jsonPath("$.isCompleted") { value(updatedTodo.isCompleted) }
             }
         }
     }
