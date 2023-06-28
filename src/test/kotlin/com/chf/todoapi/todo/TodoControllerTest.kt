@@ -83,13 +83,13 @@ class TodoControllerTest @Autowired constructor(
 
     @Test
     fun `should return 404 when todo id is not exists`() {
-        val todoId = -99
-        val exceptionMessage = "Could not find a todo with the id $todoId"
+        val invalidTodoId = -99
+        val exceptionMessage = "Could not find a todo with the id $invalidTodoId"
 
-        `when`(todoService.getTodo(todoId))
+        `when`(todoService.getTodo(invalidTodoId))
                 .thenThrow(TodoNotFoundException(exceptionMessage))
 
-        mockMvc.get("$baseUrl/$todoId")
+        mockMvc.get("$baseUrl/$invalidTodoId")
                 .andExpect {
                     status { isNotFound() }
                     content { string(exceptionMessage) }
@@ -138,6 +138,24 @@ class TodoControllerTest @Autowired constructor(
                 jsonPath("$.name") { value(updatedTodo.name) }
                 jsonPath("$.isCompleted") { value(updatedTodo.isCompleted) }
             }
+        }
+    }
+
+    @Test
+    fun `update should return 404 when todo id is not exists`() {
+        val invalidTodoId = -99
+        val todo = TodoRequest("Updated value", true)
+        val exceptionMessage = "Could not find a todo with the id $invalidTodoId"
+
+        `when`(todoService.updateTodo(invalidTodoId, todo))
+                .thenThrow(TodoNotFoundException(exceptionMessage))
+
+        mockMvc.put("$baseUrl/$invalidTodoId") {
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(todo)
+        }.andExpect {
+            status { isNotFound() }
+            content { string(exceptionMessage) }
         }
     }
 }
