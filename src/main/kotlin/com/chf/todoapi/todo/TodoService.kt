@@ -5,4 +5,5 @@ interface TodoService {
     fun getTodo(todoId: Int): TodoResponse
     fun addTodo(todoRequest: TodoRequest): TodoResponse
     fun updateTodo(updatedTodoId: Int, updatedTodo: TodoRequest): TodoResponse
+    fun deleteTodo(todoId: Int)
 }
