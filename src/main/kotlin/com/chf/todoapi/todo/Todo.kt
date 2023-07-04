@@ -7,11 +7,11 @@ import jakarta.persistence.*
 data class Todo(
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
-        private val id: Long,
+        val id: Int?,
 
         @Column(nullable = false)
-        private  val name: String,
+        val name: String,
 
         @Column(name = "completed")
-        private val isCompleted: Boolean,
+        val isCompleted: Boolean,
 )
