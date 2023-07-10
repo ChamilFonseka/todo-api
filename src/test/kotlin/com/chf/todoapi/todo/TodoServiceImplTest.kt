@@ -32,7 +32,7 @@ class TodoServiceImplTest  @Autowired constructor(
 
     @Test
     fun `should add the todoRequest and return a todoResponse with a generated id`() {
-        val todoRequest = TodoRequest("Go to shopping", false)
+        val todoRequest = TodoRequest("Test todo", false)
 
         val todoResponse = todoService.addTodo(todoRequest)
 
@@ -43,7 +43,16 @@ class TodoServiceImplTest  @Autowired constructor(
     }
 
     @Test
-    fun updateTodo() {
+    fun `should update the todoRequest`() {
+        val todoRequest = TodoRequest("Test todo", false)
+        val todoResponse = todoService.addTodo(todoRequest)
+
+        val updatedTodo = todoService.updateTodo(todoResponse.id, TodoRequest("Update Todo Name", true))
+        val fromDb = todoService.getTodo(todoResponse.id)
+
+        assertThat(updatedTodo.id).isEqualTo(fromDb.id)
+        assertThat(updatedTodo.name).isEqualTo(fromDb.name)
+        assertThat(updatedTodo.isCompleted).isEqualTo(fromDb.isCompleted)
     }
 
     @Test

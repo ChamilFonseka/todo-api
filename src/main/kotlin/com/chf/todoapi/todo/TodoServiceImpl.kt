@@ -12,28 +12,31 @@ class TodoServiceImpl @Autowired constructor(
     }
 
     override fun getTodo(todoId: Int): TodoResponse {
-        TODO("Not yet implemented")
+        val todoOpt = todoRepository.findById(todoId)
+
+        if(!todoOpt.isPresent) throw TodoNotFoundException("Could not find a todo with the id $todoId")
+
+        val todo = todoOpt.get()
+        return TodoResponse(todo.id!!, todo.name, todo.isCompleted )
     }
 
     override fun addTodo(todoRequest: TodoRequest): TodoResponse {
-        val todo = mapTo(todoRequest)
-        val savedTodo = todoRepository.save(todo)
-        return mapTo(savedTodo)
+        val savedTodo = todoRepository.save(Todo(null, todoRequest.name, todoRequest.isCompleted))
+
+        return TodoResponse(savedTodo.id!!, savedTodo.name, savedTodo.isCompleted)
     }
 
     override fun updateTodo(updatedTodoId: Int, updatedTodo: TodoRequest): TodoResponse {
-        TODO("Not yet implemented")
+        val todo = todoRepository.getReferenceById(updatedTodoId)
+        todo.name = updatedTodo.name
+        todo.isCompleted = updatedTodo.isCompleted
+
+        val savedTodo = todoRepository.save(todo)
+
+        return TodoResponse(savedTodo.id!!, savedTodo.name, savedTodo.isCompleted)
     }
 
     override fun deleteTodo(todoId: Int) {
         TODO("Not yet implemented")
-    }
-
-    private fun mapTo(todoRequest: TodoRequest): Todo {
-        return Todo(null, name = todoRequest.name, isCompleted = todoRequest.isCompleted)
-    }
-
-    private fun mapTo(todo: Todo): TodoResponse {
-        return TodoResponse(todo.id!!, todo.name, todo.isCompleted)
     }
 }

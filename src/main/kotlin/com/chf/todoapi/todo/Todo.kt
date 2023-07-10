@@ -10,8 +10,8 @@ data class Todo(
         val id: Int?,
 
         @Column(nullable = false)
-        val name: String,
+        var name: String,
 
         @Column(name = "completed")
-        val isCompleted: Boolean,
+        var isCompleted: Boolean,
 )
