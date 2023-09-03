@@ -7,12 +7,6 @@ pipeline {
     }
 
     stages {
-        stage('Cleanup Workspace') {
-            steps {
-                cleanWs()
-            }
-        }
-
         stage('Build') {
             steps {
                 bat "java -version"
