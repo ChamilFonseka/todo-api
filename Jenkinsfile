@@ -18,6 +18,7 @@ pipeline {
         }
         stage('Build') {
             steps {
+                bat "java -version"
                 bat "gradle clean build"
             }
         }
