@@ -3,6 +3,7 @@ pipeline {
 
     tools {
         gradle "Gradle8.3"
+        java "JDK17"
     }
 
     stages {
