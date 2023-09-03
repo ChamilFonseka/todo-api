@@ -12,11 +12,7 @@ pipeline {
                 cleanWs()
             }
         }
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/ChamilFonseka/todo-api.git'
-            }
-        }
+
         stage('Build') {
             steps {
                 bat "java -version"
