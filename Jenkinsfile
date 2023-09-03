@@ -12,12 +12,8 @@ pipeline {
             }
         }
 
-        stage('Checkout from SCM') {
+        stage('Build') {
             steps {
-
-                git 'https://github.com/ChamilFonseka/todo-api.git'
-
-
                 bat "gradle clean build"
             }
         }
